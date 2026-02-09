@@ -1,6 +1,5 @@
 package com.github.fabiankevin.quickstart.web.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fabiankevin.quickstart.exceptions.ApiException;
 import com.github.fabiankevin.quickstart.web.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,17 +33,17 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(get("/test/api-ex"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request Failed"))
+                .andExpect(jsonPath("$.message").value("Request failed"))
                 .andExpect(jsonPath("$.details").value("Something went wrong"));
     }
 
     @Test
     void accessDeniedEndpoint_returnsForbiddenResponse() throws Exception {
-        doThrow(new org.springframework.security.access.AccessDeniedException("Access is denied")).when(service).accessDenied();
+        doThrow(new AccessDeniedException("Access is denied")).when(service).accessDenied();
 
         mockMvc.perform(get("/test/access-denied"))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message").value("Access Denied"));
+                .andExpect(jsonPath("$.message").value("Access denied"));
     }
 
     @Test
@@ -52,21 +52,21 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(post("/test/json").contentType(MediaType.APPLICATION_JSON).content(badJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Invalid Request Format"));
+                .andExpect(jsonPath("$.message").value("Invalid request body"));
     }
 
     @Test
     void missingParamEndpoint_returnsBadRequestWithMissingParameterMessage() throws Exception {
         mockMvc.perform(get("/test/param"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Missing Parameter"));
+                .andExpect(jsonPath("$.message").value("Missing parameter"));
     }
 
     @Test
     void methodNotAllowed_returnsMethodNotAllowed() throws Exception {
         mockMvc.perform(post("/test/method-only"))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(jsonPath("$.message").value("Method Not Allowed"));
+                .andExpect(jsonPath("$.message").value("Method not allowed"));
     }
 
     @Test
@@ -75,7 +75,7 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(post("/test/upload"))
                 .andExpect(status().isPayloadTooLarge())
-                .andExpect(jsonPath("$.message").value("File Too Large"));
+                .andExpect(jsonPath("$.message").value("Content too large"));
     }
 
     @Test
@@ -84,7 +84,7 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(put("/test/put"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request Failed"));
+                .andExpect(jsonPath("$.message").value("Request failed"));
     }
 
     @Test
@@ -93,7 +93,7 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(patch("/test/patch"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request Failed"));
+                .andExpect(jsonPath("$.message").value("Request failed"));
     }
 
     @Test
@@ -102,6 +102,6 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(delete("/test/delete"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request Failed"));
+                .andExpect(jsonPath("$.message").value("Request failed"));
     }
 }
