@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.fabiankevin</groupId>
     <artifactId>quickstart-spring-boot-parent-starter</artifactId>
-    <version>0.0.41</version>
+    <version>0.0.42-SNAPSHOT</version>
     <name>quickstart-spring-boot-parent-starter</name>
     <description>Provides sensible Spring Boot defaults to speed up development and let you focus on your business logic.</description>
     <packaging>pom</packaging>
@@ -52,7 +52,7 @@
             <dependency>
                 <groupId>com.github.fabiankevin</groupId>
                 <artifactId>quickstart-spring-boot-starter-web</artifactId>
-                <version>0.0.41</version>
+                <version>0.0.42-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
