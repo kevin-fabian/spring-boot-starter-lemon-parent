@@ -1,4 +1,4 @@
-package com.github.fabiankevin.quickstart.exceptions;
+package com.github.fabiankevin.quickstart.web.exceptions;
 
 import lombok.Getter;
 

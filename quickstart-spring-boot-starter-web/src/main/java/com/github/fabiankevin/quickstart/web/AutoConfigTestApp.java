@@ -1,8 +1,7 @@
-package com.github.fabiankevin.quickstart;
+package com.github.fabiankevin.quickstart.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Profile;
 
 @SpringBootApplication
 public class AutoConfigTestApp {

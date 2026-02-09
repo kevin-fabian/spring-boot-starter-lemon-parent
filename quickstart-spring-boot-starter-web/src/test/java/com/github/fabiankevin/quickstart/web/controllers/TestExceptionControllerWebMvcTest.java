@@ -1,6 +1,6 @@
 package com.github.fabiankevin.quickstart.web.controllers;
 
-import com.github.fabiankevin.quickstart.exceptions.ApiException;
+import com.github.fabiankevin.quickstart.web.exceptions.ApiException;
 import com.github.fabiankevin.quickstart.web.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

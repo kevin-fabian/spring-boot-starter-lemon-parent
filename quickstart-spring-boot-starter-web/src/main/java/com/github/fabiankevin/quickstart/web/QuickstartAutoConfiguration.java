@@ -1,6 +1,5 @@
-package com.github.fabiankevin.quickstart;
+package com.github.fabiankevin.quickstart.web;
 
-import com.github.fabiankevin.quickstart.web.GlobalExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;

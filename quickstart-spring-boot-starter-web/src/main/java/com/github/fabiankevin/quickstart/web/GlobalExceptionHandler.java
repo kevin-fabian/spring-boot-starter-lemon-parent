@@ -2,8 +2,8 @@ package com.github.fabiankevin.quickstart.web;
 
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.github.fabiankevin.quickstart.exceptions.ApiException;
-import com.github.fabiankevin.quickstart.exceptions.DomainException;
+import com.github.fabiankevin.quickstart.web.exceptions.ApiException;
+import com.github.fabiankevin.quickstart.web.exceptions.DomainException;
 import com.github.fabiankevin.quickstart.web.dto.ApiErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

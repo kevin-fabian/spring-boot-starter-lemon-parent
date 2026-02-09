@@ -1,6 +1,5 @@
-package com.github.fabiankevin.quickstart;
+package com.github.fabiankevin.quickstart.web;
 
-import com.github.fabiankevin.quickstart.web.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
