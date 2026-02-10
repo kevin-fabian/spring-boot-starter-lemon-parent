@@ -4,27 +4,22 @@ Lemon is an opinionated Spring Boot parent that provides secure, sane, productio
 
 If something is risky, slow, or hard to operate — Lemon does not enable it by default.
 
-The Rules of Lemon
-1. Secure by default
+### The Rules of Lemon
 
-Nothing is implicitly public
+#### 1. Secure by default
 
-Sensible security and encryption defaults
+- Nothing is implicitly public
+- Sensible security and encryption defaults
+- Secrets must never live in code
 
-Secrets must never live in code
+#### 2. Observable by default
 
-2. Observable by default
+- Health, metrics, and traces are always available
+- Logs are structured and consistent
+- Production issues should be diagnosable without redeploying
 
-Health, metrics, and traces are always available
+#### 3. Fail fast, fail clear
 
-Logs are structured and consistent
-
-Production issues should be diagnosable without redeploying
-
-3. Fail fast, fail clear
-
-Inputs are validated at the edge
-
-Errors are consistent and client-friendly
-
-Misconfiguration should break at startup, not runtime
+- Inputs are validated at the edge
+- Errors are consistent and client-friendly
+- Misconfiguration should break at startup, not runtime
