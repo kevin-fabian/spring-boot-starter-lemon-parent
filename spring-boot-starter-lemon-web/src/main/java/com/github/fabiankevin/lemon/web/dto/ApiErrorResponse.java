@@ -1,41 +1,35 @@
 package com.github.fabiankevin.lemon.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "Error response object")
+@Builder
 public class ApiErrorResponse {
     @Schema(description = "Main error message", example = "Validation Failed")
-    private String message;
+    private String title;
 
-    @Schema(description = "Detailed error description", example = "Invalid request data")
+    @Schema(description = "Detailed error description", example = "The field 'email' must be a valid email address.")
     private String details;
 
-    @Schema(description = "Timestamp of when the error occurred", example = "2025-03-01T12:00:00Z")
-    private Instant timestamp;
+    @Schema(description = "Http status code", example = "400")
+    private int status;
 
     @Schema(description = "List of validation errors", example = "[\"Name is required\"]")
     private List<String> errors;
 
-    public ApiErrorResponse(String message, String details) {
-        this.message = message;
+    public ApiErrorResponse(String title, String details, int status, List<String> errors) {
+        this.title = title;
         this.details = details;
-        this.timestamp = Instant.now();
-    }
-
-    public ApiErrorResponse(String message, List<String> errors) {
-        this.message = message;
+        this.status = status;
         this.errors = errors;
-        this.timestamp = Instant.now();
     }
 }

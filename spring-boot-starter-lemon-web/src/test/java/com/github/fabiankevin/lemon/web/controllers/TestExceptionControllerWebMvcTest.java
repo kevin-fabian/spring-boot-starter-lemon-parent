@@ -33,8 +33,9 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(get("/test/api-ex"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request failed"))
-                .andExpect(jsonPath("$.details").value("Something went wrong"));
+                .andExpect(jsonPath("$.title").value("Request failed"))
+                .andExpect(jsonPath("$.details").value("Something went wrong"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
@@ -43,7 +44,8 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(get("/test/access-denied"))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message").value("Access denied"));
+                .andExpect(jsonPath("$.title").value("Access denied"))
+                .andExpect(jsonPath("$.status").value(403));
     }
 
     @Test
@@ -52,21 +54,24 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(post("/test/json").contentType(MediaType.APPLICATION_JSON).content(badJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Invalid request body"));
+                .andExpect(jsonPath("$.title").value("Invalid request body"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
     void missingParamEndpoint_returnsBadRequestWithMissingParameterMessage() throws Exception {
         mockMvc.perform(get("/test/param"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Missing parameter"));
+                .andExpect(jsonPath("$.title").value("Missing parameter"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
     void methodNotAllowed_returnsMethodNotAllowed() throws Exception {
         mockMvc.perform(post("/test/method-only"))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(jsonPath("$.message").value("Method not allowed"));
+                .andExpect(jsonPath("$.title").value("Method not allowed"))
+                .andExpect(jsonPath("$.status").value(405));
     }
 
     @Test
@@ -75,7 +80,8 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(post("/test/upload"))
                 .andExpect(status().isPayloadTooLarge())
-                .andExpect(jsonPath("$.message").value("Content too large"));
+                .andExpect(jsonPath("$.title").value("Content too large"))
+                .andExpect(jsonPath("$.status").value(413));
     }
 
     @Test
@@ -84,7 +90,8 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(put("/test/put"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request failed"));
+                .andExpect(jsonPath("$.title").value("Request failed"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
@@ -93,7 +100,8 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(patch("/test/patch"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request failed"));
+                .andExpect(jsonPath("$.title").value("Request failed"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
@@ -102,6 +110,7 @@ class TestExceptionControllerWebMvcTest {
 
         mockMvc.perform(delete("/test/delete"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Request failed"));
+                .andExpect(jsonPath("$.title").value("Request failed"))
+                .andExpect(jsonPath("$.status").value(400));
     }
 }

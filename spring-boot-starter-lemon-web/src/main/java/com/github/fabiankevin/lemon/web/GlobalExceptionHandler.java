@@ -40,20 +40,24 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleDomainException(DomainException ex) {
         log.debug("DomainException: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatusCode.valueOf(400))
-                .body(new ApiErrorResponse("Request failed", ex.getMessage()));
+                .body(ApiErrorResponse.builder()
+                        .title("Domain error")
+                        .details(ex.getMessage())
+                        .status(400)
+                        .build());
 
     }
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorResponse> handleAppException(ApiException ex) {
         log.debug("ApiException: {}", ex.getMessage(), ex);
-        HttpStatusCode status = HttpStatusCode.valueOf(ex.getHttpStatusCode());
-        if (ex.getClass().getSimpleName().contains("NotFound")) {
-            status = HttpStatusCode.valueOf(404);
-        }
 
-        return ResponseEntity.status(status)
-                .body(new ApiErrorResponse("Request failed", ex.getMessage()));
+        return ResponseEntity.status(ex.getHttpStatusCode())
+                .body(ApiErrorResponse.builder()
+                        .title("Request failed")
+                        .details(ex.getMessage())
+                        .status(ex.getHttpStatusCode())
+                        .build());
 
     }
 
@@ -67,7 +71,11 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(FieldError::getDefaultMessage)
                 .toList();
-        return new ApiErrorResponse("Invalid request parameters", errors);
+        return ApiErrorResponse.builder()
+                .title("Invalid request parameters")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errors(errors)
+                .build();
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -76,12 +84,20 @@ public class GlobalExceptionHandler {
         log.debug("HttpMessageNotReadableException: {}", ex.getMessage(), ex);
 
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException) {
-            return new ApiErrorResponse("Invalid request body", invalidFormatException.getPath().stream()
-                    .map(ref -> "The value provided for '%s' has an incorrect format".formatted(ref.getFieldName()))
-                    .toList());
+            return ApiErrorResponse.builder()
+                    .title("Invalid request body")
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .errors(invalidFormatException.getPath().stream()
+                            .map(ref -> "The value provided for '%s' has an incorrect format".formatted(ref.getFieldName()))
+                            .toList())
+                    .build();
         }
 
-        return new ApiErrorResponse("Invalid request body", "The request body is not properly formatted or contains invalid JSON");
+        return ApiErrorResponse.builder()
+                .title("Invalid request body")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .details("The request body is not properly formatted or contains invalid JSON")
+                .build();
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -89,24 +105,35 @@ public class GlobalExceptionHandler {
     public ApiErrorResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         log.debug("MethodArgumentTypeMismatchException: {}", ex.getMessage(), ex);
         String errorMessage = String.format("Parameter '%s' must be of type '%s'", ex.getName(), ex.getRequiredType().getSimpleName());
-        return new ApiErrorResponse("Type mismatch", errorMessage);
+        return ApiErrorResponse.builder()
+                .title("Type mismatch")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .details(errorMessage)
+                .build();
     }
 
     @ExceptionHandler(ServletRequestBindingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleRequestBindingException(ServletRequestBindingException ex) {
         log.debug("ServletRequestBindingException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Missing required request parameters", "Required request parameters or headers are missing or invalid");
+        return ApiErrorResponse.builder()
+                .title("Missing required request parameters")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .details("Required request parameters or headers are missing or invalid")
+                .build();
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handlerMethodValidationException(HandlerMethodValidationException ex) {
         log.debug("HandlerMethodValidationException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Invalid request",
-                ex.getValueResults().getFirst().getResolvableErrors().stream()
+        return ApiErrorResponse.builder()
+                .title("Invalid request")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errors(ex.getValueResults().getFirst().getResolvableErrors().stream()
                         .map(MessageSourceResolvable::getDefaultMessage)
-                        .toList());
+                        .toList())
+                .build();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -117,32 +144,45 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
                 .toList();
-        return new ApiErrorResponse("Validation failed", errors);
+        return ApiErrorResponse.builder()
+                .title("Validation failed")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errors(errors)
+                .build();
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleMissingParams(MissingServletRequestParameterException ex) {
         log.debug("MissingServletRequestParameterException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Missing parameter",
-                String.format("The required parameter '%s' of type '%s' is missing",
-                        ex.getParameterName(), ex.getParameterType()));
+        return ApiErrorResponse.builder()
+                .title("Missing parameter")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .details(String.format("The required parameter '%s' of type '%s' is missing",
+                        ex.getParameterName(), ex.getParameterType()))
+                .build();
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleMissingHeader(MissingRequestHeaderException ex) {
         log.debug("MissingRequestHeaderException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Missing header",
-                String.format("The required header '%s' is missing", ex.getHeaderName()));
+        return ApiErrorResponse.builder()
+                .title("Missing header")
+                .status(HttpStatus.BAD_REQUEST.value())
+                .details(String.format("The required header '%s' is missing", ex.getHeaderName()))
+                .build();
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
         log.debug("AccessDeniedException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Access denied",
-                "You don't have permission to access this resource");
+        return ApiErrorResponse.builder()
+                .title("Access denied")
+                .status(HttpStatus.FORBIDDEN.value())
+                .details("You don't have permission to access this resource")
+                .build();
     }
 
 
@@ -150,42 +190,58 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ApiErrorResponse handle(HttpRequestMethodNotSupportedException ex) {
         log.debug("HttpRequestMethodNotSupportedException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Method not allowed",
-                String.format("The %s method is not allowed for this endpoint. Allowed methods are: %s", ex.getMethod(), ex.getSupportedHttpMethods()));
+        return ApiErrorResponse.builder()
+                .title("Method not allowed")
+                .status(HttpStatus.METHOD_NOT_ALLOWED.value())
+                .details(String.format("The %s method is not allowed for this endpoint. Allowed methods are: %s", ex.getMethod(), ex.getSupportedHttpMethods()))
+                .build();
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ApiErrorResponse handleUnsupportedMediaType(HttpMediaTypeNotSupportedException ex) {
         log.debug("HttpMediaTypeNotSupportedException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Unsupported media type",
-                String.format("The content type '%s' is not supported. Supported types are: %s",
+        return ApiErrorResponse.builder()
+                .title("Unsupported media type")
+                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+                .details(String.format("The content type '%s' is not supported. Supported types are: %s",
                         ex.getContentType(),
                         ex.getSupportedMediaTypes().stream()
                                 .map(MediaType::toString)
-                                .collect(Collectors.joining(", "))));
+                                .collect(Collectors.joining(", "))))
+                .build();
     }
 
     @ExceptionHandler(AsyncRequestTimeoutException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ApiErrorResponse handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex) {
         log.debug("AsyncRequestTimeoutException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Request timeout",
-                "The request took too long to process and timed out");
+        return ApiErrorResponse.builder()
+                .title("Request timeout")
+                .status(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .details("The request took too long to process and timed out")
+                .build();
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorResponse handleGenericException(Exception ex) {
         log.debug("handleGenericException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Internal server error", "An unexpected error occurred. Please try again later or contact support if the problem persists.");
+        return ApiErrorResponse.builder()
+                .title("Internal server error")
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .details("An unexpected error occurred. Please try again later or contact support if the problem persists.")
+                .build();
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.CONTENT_TOO_LARGE)
     public ApiErrorResponse handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         log.debug("MaxUploadSizeExceededException: {}", ex.getMessage(), ex);
-        return new ApiErrorResponse("Content too large",
-                "The uploaded content exceeds the maximum allowed size");
+        return ApiErrorResponse.builder()
+                .title("Content too large")
+                .status(HttpStatus.CONTENT_TOO_LARGE.value())
+                .details("The uploaded content exceeds the maximum allowed size")
+                .build();
     }
 }
