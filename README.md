@@ -1,4 +1,4 @@
-## 🍋 Lemon Parent
+## 🍋 Spring Boot Lemon Starter Parent
 
 Lemon is an opinionated Spring Boot parent that provides secure, sane, production-ready defaults.
 If something is risky, slow, or hard to operate. Lemon does not enable it by default.
