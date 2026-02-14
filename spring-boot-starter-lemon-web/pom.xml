@@ -13,7 +13,7 @@
 
     <properties>
         <springdoc-openapi-starter-webmvc-ui.version>2.8.9</springdoc-openapi-starter-webmvc-ui.version>
-        <logbook-spring-boot-starter.version>3.12.0</logbook-spring-boot-starter.version>
+        <logbook-spring-boot-starter.version>4.0.2</logbook-spring-boot-starter.version>
         <jasypt-spring-boot-starter.version>3.0.5</jasypt-spring-boot-starter.version>
     </properties>
     <dependencies>
@@ -31,8 +31,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -60,6 +60,7 @@
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>logbook-spring-boot-starter</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -90,7 +91,6 @@
                 <groupId>org.zalando</groupId>
                 <artifactId>logbook-spring-boot-starter</artifactId>
                 <version>${logbook-spring-boot-starter.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
