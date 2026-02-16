@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.fabiankevin</groupId>
     <artifactId>spring-boot-starter-lemon-parent</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5-SNAPSHOT</version>
     <name>spring-boot-starter-lemon-parent</name>
     <description>Lemon favors secure, minimal, production-ready defaults.
         You can override anything, but unsafe choices are never the default.
@@ -59,7 +59,7 @@
             <dependency>
                 <groupId>com.github.fabiankevin</groupId>
                 <artifactId>spring-boot-starter-lemon-web</artifactId>
-                <version>0.1.4</version>
+                <version>0.1.5-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
