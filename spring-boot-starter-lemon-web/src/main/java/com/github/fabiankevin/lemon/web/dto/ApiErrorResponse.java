@@ -20,15 +20,19 @@ public class ApiErrorResponse {
     @Schema(description = "Detailed error description", example = "The field 'email' must be a valid email address.")
     private String details;
 
+    @Schema(description = "Application-specific error code", example = "AUTH-OTP-001")
+    private String code;
+
     @Schema(description = "Http status code", example = "400")
     private int status;
 
     @Schema(description = "List of validation errors", example = "[\"Name is required\"]")
     private List<String> errors;
 
-    public ApiErrorResponse(String title, String details, int status, List<String> errors) {
+    public ApiErrorResponse(String title, String details, String code, int status, List<String> errors) {
         this.title = title;
         this.details = details;
+        this.code = code;
         this.status = status;
         this.errors = errors;
     }
