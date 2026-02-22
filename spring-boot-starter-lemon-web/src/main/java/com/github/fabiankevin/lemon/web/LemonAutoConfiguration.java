@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import tools.jackson.databind.json.JsonMapper;
 
 @AutoConfiguration
 @PropertySource("classpath:application-simple-default.properties")
@@ -19,12 +18,12 @@ public class LemonAutoConfiguration {
     }
 
     @Bean
-    public AuthenticationEntryPoint defaultInvalidTokenAuthenticationEntryPoint(JsonMapper jsonMapper) {
-        return new DefaultInvalidTokenAuthenticationEntryPoint(jsonMapper);
+    public AuthenticationEntryPoint defaultInvalidTokenAuthenticationEntryPoint() {
+        return new DefaultInvalidTokenAuthenticationEntryPoint();
     }
 
     @Bean
-    public AccessDeniedHandler accessDeniedHandler(JsonMapper jsonMapper){
-        return new DefaultBearerAccessDeniedHandler(jsonMapper);
+    public AccessDeniedHandler defaultBearerAccessDeniedHandler(){
+        return new DefaultBearerAccessDeniedHandler();
     }
 }

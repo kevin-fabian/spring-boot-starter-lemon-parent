@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class DefaultBearerAccessDeniedHandler implements AccessDeniedHandler {
     private static final String DEFAULT_FORBIDDEN_TITLE = "Forbidden";
     private static final String DEFAULT_FORBIDDEN_DETAILS = "Insufficient scope";
-    private final JsonMapper jsonMapper;
+    private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex) throws IOException {

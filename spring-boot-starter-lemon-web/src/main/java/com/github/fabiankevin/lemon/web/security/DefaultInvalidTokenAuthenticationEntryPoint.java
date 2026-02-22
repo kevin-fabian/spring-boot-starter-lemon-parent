@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class DefaultInvalidTokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private final JsonMapper jsonMapper;
+    private final JsonMapper jsonMapper = JsonMapper.builder().build();
     private static final String DEFAULT_UNAUTHORIZED_TITLE = "Unauthorized";
     private static final String DEFAULT_UNAUTHORIZED_DETAILS = "Invalid or expired token";
 

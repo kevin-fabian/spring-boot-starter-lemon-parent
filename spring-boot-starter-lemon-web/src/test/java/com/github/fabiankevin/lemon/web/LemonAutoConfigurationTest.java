@@ -1,5 +1,7 @@
 package com.github.fabiankevin.lemon.web;
 
+import com.github.fabiankevin.lemon.web.security.DefaultBearerAccessDeniedHandler;
+import com.github.fabiankevin.lemon.web.security.DefaultInvalidTokenAuthenticationEntryPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -13,7 +15,9 @@ class LemonAutoConfigurationTest {
     @Test
     void globalExceptionHandler_shouldHasSingleBean() {
         this.contextRunner.withUserConfiguration(LemonAutoConfiguration.class).run((context) -> {
-            assertThat(context).hasSingleBean(GlobalExceptionHandler.class);
+            assertThat(context).hasSingleBean(GlobalExceptionHandler.class)
+                    .hasSingleBean(DefaultInvalidTokenAuthenticationEntryPoint.class)
+                    .hasSingleBean(DefaultBearerAccessDeniedHandler.class);
         });
     }
 
