@@ -8,15 +8,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@Component
 @RequiredArgsConstructor
-public class InvalidTokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class DefaultInvalidTokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final JsonMapper jsonMapper;
     private static final String DEFAULT_UNAUTHORIZED_TITLE = "Unauthorized";
     private static final String DEFAULT_UNAUTHORIZED_DETAILS = "Invalid or expired token";

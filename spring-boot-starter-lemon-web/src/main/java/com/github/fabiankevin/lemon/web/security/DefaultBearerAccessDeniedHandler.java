@@ -8,15 +8,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@Component
 @RequiredArgsConstructor
-public class BearerAccessDeniedHandler implements AccessDeniedHandler {
+public class DefaultBearerAccessDeniedHandler implements AccessDeniedHandler {
     private static final String DEFAULT_FORBIDDEN_TITLE = "Forbidden";
     private static final String DEFAULT_FORBIDDEN_DETAILS = "Insufficient scope";
     private final JsonMapper jsonMapper;
