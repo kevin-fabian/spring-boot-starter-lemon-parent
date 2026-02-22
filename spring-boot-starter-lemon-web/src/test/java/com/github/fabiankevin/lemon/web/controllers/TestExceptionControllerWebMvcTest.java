@@ -2,6 +2,7 @@ package com.github.fabiankevin.lemon.web.controllers;
 
 import com.github.fabiankevin.lemon.web.GlobalExceptionHandler;
 import com.github.fabiankevin.lemon.web.exceptions.ApiException;
+import com.github.fabiankevin.lemon.web.exceptions.BusinessRuleException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -112,5 +113,17 @@ class TestExceptionControllerWebMvcTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Request failed"))
                 .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void businessRuleExceptionEndpoint_returnsDomainErrorWithCode() throws Exception {
+        doThrow(new BusinessRuleException("Business rule violated", 400, "BUS-001")).when(service).businessRule();
+
+        mockMvc.perform(get("/test/business-rule"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Domain error"))
+                .andExpect(jsonPath("$.details").value("Business rule violated"))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.code").value("BUS-001"));
     }
 }

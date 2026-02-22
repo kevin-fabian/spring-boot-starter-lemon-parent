@@ -58,4 +58,9 @@ public class TestExceptionController {
     public void delete() {
         service.delete();
     }
+
+    @GetMapping("/business-rule")
+    public void businessRule() {
+        service.businessRule();
+    }
 }

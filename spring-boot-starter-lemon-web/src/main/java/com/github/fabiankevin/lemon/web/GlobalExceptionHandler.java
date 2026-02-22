@@ -4,6 +4,7 @@ package com.github.fabiankevin.lemon.web;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.github.fabiankevin.lemon.web.dto.ApiErrorResponse;
 import com.github.fabiankevin.lemon.web.exceptions.ApiException;
+import com.github.fabiankevin.lemon.web.exceptions.BusinessRuleException;
 import com.github.fabiankevin.lemon.web.exceptions.DomainException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,19 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ApiErrorResponse> handleBusinessRuleExceptions(BusinessRuleException ex) {
+        log.debug("BusinessRuleException: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatusCode.valueOf(400))
+                .body(ApiErrorResponse.builder()
+                        .title("Domain error")
+                        .details(ex.getMessage())
+                        .status(400)
+                        .code(ex.getCode())
+                        .build());
+
+    }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ApiErrorResponse> handleDomainException(DomainException ex) {

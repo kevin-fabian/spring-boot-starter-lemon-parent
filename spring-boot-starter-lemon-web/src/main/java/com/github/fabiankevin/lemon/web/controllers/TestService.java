@@ -12,5 +12,6 @@ public interface TestService {
     void put();
     void patch();
     void delete();
+    void businessRule();
 }
 
