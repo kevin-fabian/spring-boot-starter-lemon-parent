@@ -40,11 +40,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity<ApiErrorResponse> handleBusinessRuleExceptions(BusinessRuleException ex) {
         log.debug("BusinessRuleException: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatusCode.valueOf(400))
+        return ResponseEntity.status(HttpStatusCode.valueOf(ex.getHttpStatusCode()))
                 .body(ApiErrorResponse.builder()
                         .title("Domain error")
                         .details(ex.getMessage())
-                        .status(400)
+                        .status(ex.getHttpStatusCode())
                         .code(ex.getCode())
                         .build());
 
