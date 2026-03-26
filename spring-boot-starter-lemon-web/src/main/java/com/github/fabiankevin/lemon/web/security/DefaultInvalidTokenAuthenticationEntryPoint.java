@@ -1,11 +1,11 @@
 package com.github.fabiankevin.lemon.web.security;
 
-import com.github.fabiankevin.lemon.web.dto.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import tools.jackson.databind.json.JsonMapper;
@@ -25,17 +25,15 @@ public class DefaultInvalidTokenAuthenticationEntryPoint implements Authenticati
         // RFC 6750 header for 401
         response.setHeader(HttpHeaders.WWW_AUTHENTICATE,
                 "Bearer error=\"invalid_token\", error_description=\"" + sanitize(description) + "\"");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-                .title(DEFAULT_UNAUTHORIZED_TITLE)
-                .details(DEFAULT_UNAUTHORIZED_DETAILS)
-                .status(HttpServletResponse.SC_UNAUTHORIZED)
-                .build();
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        problemDetail.setTitle(DEFAULT_UNAUTHORIZED_TITLE);
+        problemDetail.setDetail(DEFAULT_UNAUTHORIZED_DETAILS);
 
-        jsonMapper.writeValue(response.getOutputStream(), errorResponse);
+        jsonMapper.writeValue(response.getOutputStream(), problemDetail);
     }
 
     private String sanitize(String input) {

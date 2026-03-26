@@ -1,11 +1,11 @@
 package com.github.fabiankevin.lemon.web.security;
 
-import com.github.fabiankevin.lemon.web.dto.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import tools.jackson.databind.json.JsonMapper;
@@ -26,14 +26,12 @@ public class DefaultBearerAccessDeniedHandler implements AccessDeniedHandler {
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
 
-        ApiErrorResponse body = ApiErrorResponse.builder()
-                .title(DEFAULT_FORBIDDEN_TITLE)
-                .details(DEFAULT_FORBIDDEN_DETAILS)
-                .status(HttpServletResponse.SC_FORBIDDEN)
-                .build();
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpServletResponse.SC_FORBIDDEN);
+        problemDetail.setTitle(DEFAULT_FORBIDDEN_TITLE);
+        problemDetail.setDetail(DEFAULT_FORBIDDEN_DETAILS);
 
-        jsonMapper.writeValue(response.getOutputStream(), body);
+        jsonMapper.writeValue(response.getOutputStream(), problemDetail);
     }
 }

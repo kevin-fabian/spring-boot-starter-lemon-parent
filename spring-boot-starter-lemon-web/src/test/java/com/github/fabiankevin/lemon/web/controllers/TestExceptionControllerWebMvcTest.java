@@ -35,7 +35,7 @@ class TestExceptionControllerWebMvcTest {
         mockMvc.perform(get("/test/api-ex"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Request failed"))
-                .andExpect(jsonPath("$.details").value("Something went wrong"))
+                .andExpect(jsonPath("$.detail").value("Something went wrong"))
                 .andExpect(jsonPath("$.status").value(400));
     }
 
@@ -117,12 +117,12 @@ class TestExceptionControllerWebMvcTest {
 
     @Test
     void businessRuleExceptionEndpoint_returnsDomainErrorWithCode() throws Exception {
-        doThrow(new BusinessRuleException("Business rule violated", 400, "BUS-001")).when(service).businessRule();
+        doThrow(new BusinessRuleException("Business rule violated", 400, "Business Rules Constraint", "BUS-001")).when(service).businessRule();
 
         mockMvc.perform(get("/test/business-rule"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.title").value("Domain error"))
-                .andExpect(jsonPath("$.details").value("Business rule violated"))
+                .andExpect(jsonPath("$.title").value("Business Rules Constraint"))
+                .andExpect(jsonPath("$.detail").value("Business rule violated"))
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.code").value("BUS-001"));
     }
