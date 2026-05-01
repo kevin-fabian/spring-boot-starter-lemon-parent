@@ -121,6 +121,7 @@
                     <artifactId>gitflow-maven-plugin</artifactId>
                     <version>${gitflow-maven-plugin.version}</version>
                     <configuration>
+                        <mvnExecutable>./mvnw</mvnExecutable>
                         <noBackMerge>true</noBackMerge>
                         <releaseMergeFFOnly>true</releaseMergeFFOnly>
                         <releaseMergeNoFF>false</releaseMergeNoFF>
