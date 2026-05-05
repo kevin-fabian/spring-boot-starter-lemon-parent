@@ -149,12 +149,6 @@
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>${liquibase-maven-plugin.version}</version>
                 </plugin>
-
-                <plugin>
-                    <groupId>com.github.ulisesbocchio</groupId>
-                    <artifactId>jasypt-maven-plugin</artifactId>
-                    <version>${jasypt-spring-boot-starter.version}</version>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
